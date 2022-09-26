@@ -1,8 +1,9 @@
 #Jessica Noel
 # September 18, 2022
 #CS-555 Agile Methods for Software Development
-
-with open("/Users/jessica/Desktop/School/CS-555/M2.B3 Project 2/tree.ged") as f:
+from datetime import *
+from prettytable import PrettyTable
+with open("tree.ged") as f:
     lines = f.readlines()
 
 #List of all supported tags including start, note, end
@@ -44,56 +45,112 @@ for line in lines:
     for x in sepLine[2:len(sepLine)]:
         args += (x + " ")
 
-    #print("--> " + line)
-    
-    
    
-    
-
-    #print(newLines)
-    #print("<-- " + sepLine[0] + "|" + sepLine[1] + "|" + validTag + "|" + args + "\n")
-    # format text
-    
-
-
-    # case_list = []
-    # for entry in entries_list:
-    #     case = {'_id': entry[0], 'key2': entry[1], 'key3':entry[2] }
-    #     case_list.append(case)
 idList = []
+famIdList = []
 nameDic = {}
 ageDic = {}
 genderDic = {}
 birthDayDic = {}
 aliveDic = {}
 deadDic = {}
+
 childDic = {}
+wifeDic = {}
+husbandDic = {}
 spouseDic = {}
+marriedDic = {}
+divorcedDic = {}
+
 
 
 #struct
-# [ 
-    id
-]
+
 for line in newLines:
     _id = ""
-    
+    _famId = ""
     for i in range(len(line)):
-        day , month , year, birthDay = ''
-        print(line[i])
+        isAlive = True
+        # print(line[i])
         if (line [i] == "INDI"):
             _id = line[i - 1]
             idList.append(_id)
+        if (line[i] == "FAM"):
+
+            _famId = line[i - 1]
+            famIdList.append(_famId)
         if (line [i] == "NAME"):
             nameDic[_id] = line[i + 1] + " " + line[i + 2]
         if (line[i] == "BIRT"):
+            day = ""
+            month = ""
+            year = "" 
+            birthDay = ""
             day = line[i + 3]
             month = line[i + 4]
             year  = line[i + 5]
             birthDay = f'{month}/{day}/{year}'
             birthDayDic[_id] = birthDay
+            year = int(year)
+            age = 2022 - year
+            ageDic[_id] = age
+            print(age)
+        if (line[i] =="DEAT"):
+            day = ""
+            month = ""
+            year = "" 
+            deathDay = ""
+            if (line[i + 1] == "N"):
+                #they're allive
+                deadDic[_id] = "NA"
+            elif (line[i + 1] == "Y"):
+                isAlive = False
+                #they dead
 
-print (birthDayDic)
+            if not(isAlive):
+                day = line[i + 4]
+                month = line[i + 5]
+                year  = line[i + 6]
+                deathDay = f'{month}/{day}/{year}'
+                deadDic[_id] = deathDay
+        if (line[i] == "SEX"):
+            genderDic[_id] = line[i + 1]
+        if (line[i] == "CHIL"):
+            childDic[line[i + 1]] = _famId
+        if (line[i] == "WIFE" or line[i] == "HUSB"):
+            spouseDic[line[i + 1]] = _famId
+            if (line[i] == "WIFE"):
+                wifeDic[line[i+1]] = _famId
+            else:
+                husbandDic[line[i + 1]] = _famId
+        if (line[i] == "MARR"):
+            day = line[i + 2]
+            month = line[i + 3]
+            year = line[i + 4]
+            date = f"{month}/{day}/{year}"
+            marriedDic[_famId] = date
+        if (line[i] == "DIV"):
+            day = line[i + 2]
+            month = line[i + 3]
+            year = line[i + 4]
+            date = f"{month}/{day}/{year}"
+            divorcedDic[_famId] = date
+    #now the person is complete
+print (marriedDic)
+x = PrettyTable()
+x.field_names = ["ID", "NAME", "GENDER","BIRTHDAY", "AGE", "ALIVE", "CHILD", "SPOUSE"]
+for id in idList:
+    newRow = [id,nameDic[id],genderDic[id],birthDayDic[id],ageDic[id],aliveDic[id], childDic[id], spouseDic[id]]
+    x.add_row(newRow)
+print(x)
+y = PrettyTable()
+y.field_names = ["ID", "MARRIED", "DIVORCED", "HUSBAND NAME", "HUSBAND ID", "WIFE NAME", "WIFE ID", "CHILDREN"]
+for famId in famIdList:
+    children = []
+    for childId in childDic:
+        if childDic[childId] == famId:
+            children.append(childId)
+    newRow = [famId, marriedDic[famId], divorcedDic[famId], nameDic[husbandDic[famId]], husbandDic[famId], nameDic[wifeDic[famId]], children]
 
 f.close()
 
