@@ -1,0 +1,244 @@
+0 HEAD
+0 NOTE Jack Schneiderhan 10445111
+1 SOUR Family Echo
+2 WWW http://www.familyecho.com/
+1 FILE My Family
+1 DATE 12 SEP 2022
+1 DEST ANSTFILE
+1 GEDC
+2 VERS 5.5.1
+2 FORM LINEAGE-LINKED
+1 SUBM @I1@
+2 NAME jschnei4@stevens.edu
+1 SUBN
+1 CHAR UTF-8
+0 @I1@ INDI
+1 NAME John /Schneiderhan/
+2 GIVN John
+2 NICK Jack
+2 SURN Schneiderhan
+1 SEX M
+1 BIRT
+2 DATE 15 MAR 2001
+1 FAMC @F1@
+0 @I2@ INDI
+1 NAME John /Schneiderhan/
+2 GIVN John
+2 SURN Schneiderhan
+2 _MARNM Schneiderhan
+1 SEX M
+1 BIRT
+2 DATE 26 MAY 1964
+1 FAMS @F1@
+1 FAMC @F2@
+0 @I3@ INDI
+1 NAME Martha /Roberts/
+2 GIVN Martha
+2 SURN Roberts
+2 _MARNM Schneiderhan
+1 SEX F
+1 BIRT
+2 DATE 23 DEC 1967
+1 FAMS @F1@
+1 FAMC @F3@
+0 @I4@ INDI
+1 NAME William /Schneiderhan/
+2 GIVN William
+2 NICK Will
+2 SURN Schneiderhan
+2 _MARNM Schneiderhan
+1 SEX M
+1 BIRT
+2 DATE 27 DEC 1995
+1 FAMC @F1@
+0 @I5@ INDI
+1 NAME Ralph /Roberts/
+2 GIVN Ralph
+2 SURN Roberts
+2 _MARNM Roberts
+1 SEX M
+1 BIRT
+2 DATE 10 OCT 1935
+1 FAMS @F3@
+0 @I6@ INDI
+1 NAME Mary /Booth/
+2 GIVN Mary
+2 SURN Booth
+2 _MARNM Roberts
+1 SEX F
+1 BIRT
+2 DATE 30 DEC 1937
+1 FAMS @F3@
+0 @I7@ INDI
+1 NAME Richard /Schneiderhan/
+2 GIVN Richard
+2 SURN Schneiderhan
+2 _MARNM Schneiderhan
+1 SEX M
+1 BIRT
+2 DATE 19 FEB 1935
+1 DEAT Y
+2 DATE 7 MAY 2004
+1 FAMS @F2@
+0 @I8@ INDI
+1 NAME Elizabeth /Schneiderhan/
+2 GIVN Elizabeth
+2 SURN Schneiderhan
+2 _MARNM Schneiderhan
+1 SEX F
+1 BIRT
+2 DATE 4 JUL 1936
+1 DEAT Y
+2 DATE 18 OCT 2021
+1 FAMS @F2@
+0 @I9@ INDI
+1 NAME Harriett /Roberts/
+2 GIVN Harriett
+2 SURN Roberts
+2 _MARNM Harvey
+1 SEX F
+1 BIRT
+2 DATE 21 DEC 1971
+1 FAMS @F4@
+1 FAMC @F3@
+0 @I10@ INDI
+1 NAME Christopher /Harvey/
+2 GIVN Christopher
+2 SURN Harvey
+2 _MARNM Harvey
+1 SEX M
+1 BIRT
+2 DATE 10 OCT 1966
+1 FAMS @F4@
+1 FAMS @F5@
+0 @I11@ INDI
+1 NAME Zachary /Harvey/
+2 GIVN Zachary
+2 SURN Harvey
+2 _MARNM Harvey
+1 SEX M
+1 BIRT
+2 DATE 10 SEP 2004
+1 FAMC @F4@
+0 @I12@ INDI
+1 NAME Charles /Schneiderhan/
+2 GIVN Charles
+2 SURN Schneiderhan
+2 _MARNM Schneiderhan
+1 SEX M
+1 BIRT
+2 DATE 20 AUG 1960
+1 FAMS @F6@
+1 FAMS @F7@
+1 FAMC @F2@
+0 @I13@ INDI
+1 NAME Patricia /Johnson/
+2 GIVN Patricia
+2 SURN Johnson
+2 _MARNM Schneiderhan
+1 SEX F
+1 BIRT
+2 DATE 8 JUN 1965
+1 DEAT Y
+2 DATE 10 JAN 1997
+1 FAMS @F7@
+0 @I14@ INDI
+1 NAME Laura /Schneiderhan/
+2 GIVN Laura
+2 SURN Schneiderhan
+2 _MARNM Schneiderhan
+1 SEX F
+1 BIRT
+2 DATE 8 JUL 1993
+1 FAMC @F7@
+0 @I15@ INDI
+1 NAME Katherine /Schneiderhan/
+2 GIVN Katherine
+2 NICK Katie
+2 SURN Schneiderhan
+2 _MARNM Schneiderhan
+1 SEX F
+1 BIRT
+2 DATE 12 FEB 1969
+1 FAMS @F6@
+0 @I16@ INDI
+1 NAME Amy /Schneiderhan/
+2 GIVN Amy
+2 SURN Schneiderhan
+2 _MARNM Schneiderhan
+1 SEX F
+1 BIRT
+2 DATE 16 APR 2003
+1 FAMC @F6@
+0 @I17@ INDI
+1 NAME Sarah /Frale/
+2 GIVN Sarah
+2 SURN Frale
+2 _MARNM Frale
+1 SEX F
+1 BIRT
+2 DATE 9 MAR 1965
+1 FAMS @F5@
+0 @F1@ FAM
+1 HUSB @I2@
+1 WIFE @I3@
+1 CHIL @I1@
+1 CHIL @I4@
+1 MARR
+2 DATE 19 JUN 1987
+1 _CURRENT Y
+1 _PRIMARY Y
+0 @F2@ FAM
+1 HUSB @I7@
+1 WIFE @I8@
+1 CHIL @I2@
+1 CHIL @I12@
+1 MARR
+2 DATE 18 AUG 1954
+1 _CURRENT Y
+1 _PRIMARY Y
+0 @F3@ FAM
+1 HUSB @I5@
+1 WIFE @I6@
+1 CHIL @I3@
+1 CHIL @I9@
+1 MARR
+2 DATE 30 DEC 1963
+1 _CURRENT Y
+1 _PRIMARY Y
+0 @F4@ FAM
+1 HUSB @I10@
+1 WIFE @I9@
+1 CHIL @I11@
+1 MARR
+2 DATE 11 JUN 2001
+1 _CURRENT Y
+1 _PRIMARY Y
+0 @F5@ FAM
+1 HUSB @I10@
+1 WIFE @I17@
+1 MARR
+2 DATE 7 JUN 1992
+1 DIV
+2 DATE 24 OCT 1998
+1 _CURRENT N
+1 _PRIMARY N
+0 @F6@ FAM
+1 HUSB @I12@
+1 WIFE @I15@
+1 CHIL @I16@
+1 MARR
+2 DATE 9 APR 2001
+1 _CURRENT Y
+1 _PRIMARY Y
+0 @F7@ FAM
+1 HUSB @I12@
+1 WIFE @I13@
+1 CHIL @I14@
+1 MARR
+2 DATE 14 AUG 1990
+1 EVEN
+2 TYPE Ending
+1 _CURRENT N
+1 _PRIMARY N
+0 TRLR
