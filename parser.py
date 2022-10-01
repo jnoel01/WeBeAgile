@@ -103,7 +103,7 @@ for line in newLines:
                 #they're allive
                 isAlive = True
                 deadDic[_id] = "NA"
-                aliveDic[_id] = isAlive4
+                aliveDic[_id] = isAlive
             elif (line[i + 1] == "Y"):
                 isAlive = False
                 aliveDic[_id] = isAlive
