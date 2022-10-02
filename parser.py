@@ -3,7 +3,7 @@
 #CS-555 Agile Methods for Software Development
 from datetime import *
 from prettytable import PrettyTable
-with open("gedcomTest.txt") as f:
+with open("gedcomTest.ged") as f:
     lines = f.readlines()
 
 #List of all supported tags including start, note, end

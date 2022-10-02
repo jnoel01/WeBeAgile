@@ -13,7 +13,7 @@ def compareDate(a,b):
         if (b[0] > a[0]): #month b is after a
             return True
         elif (b[0] == a[0]): #same year same month
-            if (b[1] > b[a]):#day b is after a
+            if (b[1] > a[1]):#day b is after a
                 return True
             elif (b[1] == a[1]):
                 return True
@@ -35,7 +35,19 @@ def testDivorceBeforeDeath(divorce, deaths):
             valid = False
             break
     return valid
-    
+
+def testBirthBeforeDeath(birth, deathDate):
+    valid = True 
+    if (len(deathDate) == 0):
+        return valid
+    birth = formatDate(birth)
+    for death in deathDate:
+        death = formatDate(death)
+        if not(compareDate(birth,death)):
+            valid = False
+            break
+    return valid
 
 
 print(testDivorceBeforeDeath('05/20/1987', ['07/14/2019', '01/23/2020']))
+print(testBirthBeforeDeath('08/15/1987', ['08/14/1987']))
