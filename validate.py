@@ -11,7 +11,7 @@ dateDic = {
     "SEP": 9,
     "OCT": 10,
     "NOV": 11,
-    "DEC": 12
+    "DEC": 12,
 }
 
 
@@ -20,7 +20,10 @@ def formatDate(date):
         return "NA"
     list = date.split("/")
     #print(list)
-    result = [dateDic.get(list[0]), int(list[1]), int(list[2])]
+    if not (dateDic.get(list[0])):
+        result = [int(list[0]), int(list[1]), int(list[2])]
+    else:
+        result = [dateDic.get(list[0]), int(list[1]), int(list[2])]
     return result
     # for i in range(len(list)):
 
@@ -28,10 +31,10 @@ def formatDate(date):
     # return list
 
 def compareDate(a,b):
-    if (a == "NA") or (b == "NA"):
-        return True
     #returns true if B is after A
     #if b is the same day as A, it also returns true
+    if (a == "NA") or (b == "NA"): 
+        return True
     if b[2] > a[2]: #year b is after a
         return True
     elif b[2] == a[2]: #same year
@@ -69,9 +72,9 @@ def testDivorceBeforeDeath(divorce, deaths):
 
 def testBirthBeforeDeath(birth, deathDate):
     #takes 1 birth date and death date as a string and returns true if its valid
+    if not(deathDate):
+        return True
     valid = True 
-    if (len(deathDate) == 0):
-        return valid
     birth = formatDate(birth)
     deathDate = formatDate(deathDate)
     if not(compareDate(birth,deathDate)):
@@ -91,8 +94,8 @@ def testMarriageBeforeDivorce(marriage, divorce):
     return valid
 
 def testBirthBeforeMarriage(marriage, births):
-    count = 0
     #takes 1 marriage date and list of spouses' births, returns true if both births are before marriage
+    count = 0
     valid = True 
     if (len(births) != 2):
         valid = False
@@ -109,6 +112,7 @@ def testBirthBeforeMarriage(marriage, births):
     
 def testMarriageBeforeDeath(marriage, deaths):
     #takes 1 marriage date and a list of death dates, returns true if the dates are valid
+    count = 0
     valid = True 
     if (len(deaths) == 0):
         return valid
@@ -116,8 +120,11 @@ def testMarriageBeforeDeath(marriage, deaths):
     for death in deaths:
         death = formatDate(death)
         if not(compareDate(marriage,death)):
-            valid = False
-            break
+            if(count == 0):
+                return -1
+            else:
+                return -2
+        count = count + 1
     return valid
 
 def datesBeforeToday(dates):
