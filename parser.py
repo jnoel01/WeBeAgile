@@ -3,6 +3,7 @@
 #CS-555 Agile Methods for Software Development
 from datetime import *
 from prettytable import PrettyTable
+from validate import *
 with open("gedcomTest.ged") as f:
     lines = f.readlines()
 
@@ -133,9 +134,9 @@ for line in newLines:
             else:
                 husbandDic[_famId] = line[i + 1]
         if (line[i] == "MARR"):
-            day = line[i + 2]
-            month = line[i + 3]
-            year = line[i + 4]
+            day = line[i + 3]
+            month = line[i + 4]
+            year = line[i + 5]
             date = f"{month}/{day}/{year}"
             marriedDic[_famId] = date
         if (line[i] == "DIV"):
@@ -146,6 +147,56 @@ for line in newLines:
             divorcedDic[_famId] = date
         
     #now the person is complete
+
+#put validation here
+    
+#check dates before today, birth b4 marriage, birth b4 death, marriage b4 divorce,
+#marriage b4 death, and marriage b4 death
+for id in famIdList:
+    marriage = marriedDic.get(id)
+    divorce = divorcedDic.get(id)
+    wifeId = wifeDic.get(id)
+    husbandId = husbandDic.get(id)
+    birthDays = [birthDayDic.get(wifeId), birthDayDic.get(husbandId)]
+    deaths = [deadDic.get(wifeId), deadDic.get(husbandId)]
+    validBirthMarriage = testBirthBeforeMarriage(marriage, birthDays)
+    validDeathMarriage = testMarriageBeforeDeath(marriage, deaths)
+    validMarriageDivorce = testMarriageBeforeDivorce(marriage,divorce)
+    validDivorceDeath = testDivorceBeforeDeath(divorce, deaths)
+    validBirthDeathWife = testBirthBeforeDeath(birthDays[1], deaths[1])
+    validBirthDeathHusb = testBirthBeforeDeath(birthDays[0], deaths[0])
+    if not(datesBeforeToday(marriage)):
+        print(f'ERROR: FAMILY: US01: {id}: marriage date {marriage} is in the future')
+    if not(datesBeforeToday(divorce)):
+        print(f'ERROR: FAMILY: US01: {id}: divorce date {divorce} is in the future')
+    
+    if not(datesBeforeToday(birthDays[0])):
+        print(f'ERROR: FAMILY: US01: {id}: wifes birth date {birthDays[0]} is in the future')
+    if not(datesBeforeToday(birthDays[1])):
+        print(f'ERROR: FAMILY: US01: {id}: husbands birth date {birthDays[1]} is in the future')
+    if not(datesBeforeToday(deaths[0])):
+        print(f'ERROR: FAMILY: US01: {id}: wifes birth date {deaths[0]} is in the future')
+    if not(datesBeforeToday(deaths[1])):
+        print(f'ERROR: FAMILY: US01: {id}: husbands death date {deaths[1]} is in the future')
+
+    
+
+    if (validBirthMarriage == -1):
+        print(f'ERROR: FAMILY: US02: {id}: Wifes birth date {birthDays[0]} following marriage date {marriage}')
+    if (validBirthMarriage == -2):
+        print(f'ERROR: FAMILY: US02: {id}: Husbands birth date {birthDays[1]} following marriage date {marriage}')
+    if not(validDeathMarriage):
+        print(f'ERROR: FAMILY: US05: {id}: DEATH HAPPENS BEFORE MARRIAGE FORMAT IT LOL')
+    if not(validMarriageDivorce):
+        print(f'ERROR: FAMILY: US04: {id}: Marriage Date {marriedDic.get(id)} before divorce date {divorcedDic.get(id)}')
+    if (validDivorceDeath == -1):
+        print(f'ERROR: FAMILY: US06: {id}: Divorce Date {divorcedDic.get(id)} following wife death date {birthDays[0]}')
+    if (validDivorceDeath == -2):
+        print(f'ERROR: FAMILY: US06: {id}: Divorce Date {divorcedDic.get(id)} following husbands death date {birthDays[1]}')
+   
+    
+
+
 
 x = PrettyTable()
 x.field_names = ["ID", "NAME", "GENDER","BIRTHDAY", "AGE", "ALIVE", "DEATH", "CHILD", "SPOUSE"]

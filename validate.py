@@ -1,12 +1,35 @@
 from datetime import date
+dateDic = {
+    "JAN": 1,
+    "FEB": 2,
+    "MAR": 3,
+    "APR": 4,
+    "MAY": 5,
+    "JUN": 6,
+    "JUL": 7,
+    "AUG": 8,
+    "SEP": 9,
+    "OCT": 10,
+    "NOV": 11,
+    "DEC": 12
+}
+
 
 def formatDate(date):
+    if (date == "NA") or not(date):
+        return "NA"
     list = date.split("/")
-    for i in range(len(list)):
-        list[i] = int(list[i])
-    return list
+    #print(list)
+    result = [dateDic.get(list[0]), int(list[1]), int(list[2])]
+    return result
+    # for i in range(len(list)):
+
+    #     list[i] = int(list[i])
+    # return list
 
 def compareDate(a,b):
+    if (a == "NA") or (b == "NA"):
+        return True
     #returns true if B is after A
     #if b is the same day as A, it also returns true
     if b[2] > a[2]: #year b is after a
@@ -27,15 +50,21 @@ def compareDate(a,b):
         return False
     
 def testDivorceBeforeDeath(divorce, deaths):
+    count = 0
     valid = True 
+    if not(divorce):
+        return True
     if (len(deaths) == 0):
         return valid
     divorce = formatDate(divorce)
     for death in deaths:
         death = formatDate(death)
         if not(compareDate(divorce,death)):
-            valid = False
-            break
+            if(count == 0):
+                return -1
+            else:
+                return -2
+        count = count + 1
     return valid
 
 def testBirthBeforeDeath(birth, deathDate):
@@ -53,7 +82,7 @@ def testMarriageBeforeDivorce(marriage, divorce):
     valid = True
     if(marriage == divorce):
         return False
-    if(len(divorce) == 0):
+    if not divorce:
         return valid
     divorce = formatDate(divorce)
     marriage = formatDate(marriage)
@@ -61,7 +90,8 @@ def testMarriageBeforeDivorce(marriage, divorce):
         valid = False
     return valid
 
-def testBirthBeforeMarriage( marriage, births):
+def testBirthBeforeMarriage(marriage, births):
+    count = 0
     #takes 1 marriage date and list of spouses' births, returns true if both births are before marriage
     valid = True 
     if (len(births) != 2):
@@ -70,8 +100,11 @@ def testBirthBeforeMarriage( marriage, births):
     for birth in births:
         birth = formatDate(birth)
         if not(compareDate(birth,marriage)):
-            valid = False
-            break
+            if(count == 0):
+                return -1
+            else:
+                return -2
+        count = count + 1
     return valid 
     
 def testMarriageBeforeDeath(marriage, deaths):
@@ -92,13 +125,11 @@ def datesBeforeToday(dates):
     today = date.today()
     today = today.strftime('%m/%d/%Y')
     today = formatDate(today)
+    dates = formatDate(dates)
     if(len(dates) == 0):
         return valid
-    for el in dates:
-        el = formatDate(el)
-        if not(compareDate(el, today)):
-            valid = False
-            break
+    if not(compareDate(dates, today)):
+        valid = False
     return valid
     
 
