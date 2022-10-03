@@ -48,6 +48,19 @@ def testBirthBeforeDeath(birth, deathDate):
             break
     return valid
 
+def testMarriageBeforeDivorce(marriage, divorce):
+    valid = True
+    if(marriage == divorce):
+        return False
+    if(len(divorce) == 0):
+        return valid
+    divorce = formatDate(divorce)
+    marriage = formatDate(marriage)
+    if not(compareDate(marriage, divorce)):
+        valid = False
+    return valid
+
 
 print(testDivorceBeforeDeath('05/20/1987', ['07/14/2019', '01/23/2020']))
 print(testBirthBeforeDeath('08/15/1987', ['08/14/1987']))
+print(testMarriageBeforeDivorce('10/20/1980', '10/20/1980'))
