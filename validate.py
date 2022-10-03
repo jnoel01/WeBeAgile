@@ -1,3 +1,5 @@
+from datetime import date
+
 def formatDate(date):
     list = date.split("/")
     for i in range(len(list)):
@@ -37,15 +39,14 @@ def testDivorceBeforeDeath(divorce, deaths):
     return valid
 
 def testBirthBeforeDeath(birth, deathDate):
+    #takes 1 birth date and death date as a string and returns true if its valid
     valid = True 
     if (len(deathDate) == 0):
         return valid
     birth = formatDate(birth)
-    for death in deathDate:
-        death = formatDate(death)
-        if not(compareDate(birth,death)):
-            valid = False
-            break
+    deathDate = formatDate(deathDate)
+    if not(compareDate(birth,deathDate)):
+        valid = False
     return valid
 
 def testMarriageBeforeDivorce(marriage, divorce):
@@ -60,7 +61,44 @@ def testMarriageBeforeDivorce(marriage, divorce):
         valid = False
     return valid
 
+def testBirthBeforeMarriage( marriage, births):
+    #takes 1 marriage date and list of spouses' births, returns true if both births are before marriage
+    valid = True 
+    if (len(births) != 2):
+        valid = False
+    marriage = formatDate(marriage)
+    for birth in births:
+        birth = formatDate(birth)
+        if not(compareDate(birth,marriage)):
+            valid = False
+            break
+    return valid 
+    
+def testMarriageBeforeDeath(marriage, deaths):
+    #takes 1 marriage date and a list of death dates, returns true if the dates are valid
+    valid = True 
+    if (len(deaths) == 0):
+        return valid
+    marriage = formatDate(marriage)
+    for death in deaths:
+        death = formatDate(death)
+        if not(compareDate(marriage,death)):
+            valid = False
+            break
+    return valid
 
-print(testDivorceBeforeDeath('05/20/1987', ['07/14/2019', '01/23/2020']))
-print(testBirthBeforeDeath('08/15/1987', ['08/14/1987']))
-print(testMarriageBeforeDivorce('10/20/1980', '10/20/1980'))
+def datesBeforeToday(dates):
+    valid = True
+    today = date.today()
+    today = today.strftime('%m/%d/%Y')
+    today = formatDate(today)
+    if(len(dates) == 0):
+        return valid
+    for el in dates:
+        el = formatDate(el)
+        if not(compareDate(el, today)):
+            valid = False
+            break
+    return valid
+    
+
