@@ -189,13 +189,13 @@ def fatherAliveForConception(childBirth, fatherDeath):
     fatherDeath = formatDate(fatherDeath)
     birthStrings = list(map(str, conception))
     birthNewStrings = "/".join(birthStrings)
-    while (birthNewStrings[0] == ("1" or "2" or "3" or "4" or "5" or "6")):
+    while (birthNewStrings[0] == (str(range(1,9)))):
         ''.join(('0',birthNewStrings))
         break
     formatted_date = datetime.strptime(birthNewStrings, '%m/%d/%Y')
     deathStrings = list(map(str, fatherDeath))
     deathNewStrings = "/".join(deathStrings)
-    while (deathNewStrings[0] == ("1" or "2" or "3" or "4" or "5" or "6")):
+    while (deathNewStrings[0] == (str(range(1,9)))):
         ''.join(('0',deathNewStrings))
         break
     death_formatted_date = datetime.strptime(deathNewStrings, '%m/%d/%Y')
@@ -215,13 +215,13 @@ def childBornAfterMarriage(childBorn, marriageDate):
     marriageDate = formatDate(marriageDate)
     birthStrings = list(map(str, childBorn))
     birthNewStrings = "/".join(birthStrings)
-    while (birthNewStrings[0] == ("1" or "2" or "3" or "4" or "5" or "6")):
+    while (birthNewStrings[0] == (str(range(1,9)))):
         ''.join(('0',birthNewStrings))
         break
     formatted_date = datetime.strptime(birthNewStrings, '%m/%d/%Y')
     marriageString = list(map(str, marriageDate))
     marriageNewStrings = "/".join(marriageString)
-    while (marriageNewStrings[0] == ("1" or "2" or "3" or "4" or "5" or "6")):
+    while (marriageNewStrings[0] == (str(range(1,9)))):
         ''.join(('0',marriageNewStrings))
         break
     marriage_formatted_date = datetime.strptime(marriageNewStrings, '%m/%d/%Y')
