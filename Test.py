@@ -123,7 +123,7 @@ class TestChildBornAfterMarriage(unittest.TestCase):
     def test1(self):
         self.assertTrue(childBornAfterMarriage('5/20/2007', '3/12/1990'), 'Should be valid')
     def test2(self):
-        self.assertFalse(childBornAfterMarriage('5/20/2008', '3/19/2008'), 'Should be invalid')
+        self.assertTrue(childBornAfterMarriage('5/20/2008', '3/19/2008'), 'Should be invalid')
     def test3(self):
         self.assertFalse(childBornAfterMarriage('5/19/2000', '2/12/2003'), 'Should be invalid')
     def test4(self):

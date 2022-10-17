@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import *
 from sqlite3 import connect
 from dateutil.relativedelta import relativedelta
 
@@ -187,22 +187,23 @@ def fatherAliveForConception(childBirth, fatherDeath):
     #father must be alive during child conception
     conception = formatDate(childBirth)
     fatherDeath = formatDate(fatherDeath)
-    for i in range(9):
-        if conception[0] != 1:
-            conception[0] = conception[0] - 1
-        else:
-            conception[0] = 12
-            conception[2] = conception[2] - 1
-
-    if (fatherDeath[2] >= conception[2]):
-        if (fatherDeath[0] > conception[0]):
-            return True
-        elif (fatherDeath[1] > conception[1]):
-            return True
-        else:
-            return False
-    else:
+    birthStrings = list(map(str, conception))
+    birthNewStrings = "/".join(birthStrings)
+    while (birthNewStrings[0] == ("1" or "2" or "3" or "4" or "5" or "6")):
+        ''.join(('0',birthNewStrings))
+        break
+    formatted_date = datetime.strptime(birthNewStrings, '%m/%d/%Y')
+    deathStrings = list(map(str, fatherDeath))
+    deathNewStrings = "/".join(deathStrings)
+    while (deathNewStrings[0] == ("1" or "2" or "3" or "4" or "5" or "6")):
+        ''.join(('0',deathNewStrings))
+        break
+    death_formatted_date = datetime.strptime(deathNewStrings, '%m/%d/%Y')
+    conceptionDate = formatted_date + relativedelta(months=-9)
+    if (conceptionDate > death_formatted_date):
         return False
+    else:
+        return True
 
 
 def childBornAfterMarriage(childBorn, marriageDate):
@@ -212,11 +213,22 @@ def childBornAfterMarriage(childBorn, marriageDate):
         return True
     childBorn = formatDate(childBorn)
     marriageDate = formatDate(marriageDate)
-    if(childBorn[2] - marriageDate[2] < 1):
-        if(childBorn[1] - marriageDate[1] < 9):
-            return False
-        else:
-            return True
-    else:
+    birthStrings = list(map(str, childBorn))
+    birthNewStrings = "/".join(birthStrings)
+    while (birthNewStrings[0] == ("1" or "2" or "3" or "4" or "5" or "6")):
+        ''.join(('0',birthNewStrings))
+        break
+    formatted_date = datetime.strptime(birthNewStrings, '%m/%d/%Y')
+    marriageString = list(map(str, marriageDate))
+    marriageNewStrings = "/".join(marriageString)
+    while (marriageNewStrings[0] == ("1" or "2" or "3" or "4" or "5" or "6")):
+        ''.join(('0',marriageNewStrings))
+        break
+    marriage_formatted_date = datetime.strptime(marriageNewStrings, '%m/%d/%Y')
+    if (marriage_formatted_date < formatted_date):
         return True
+    else:
+        return False
+    
+
     
