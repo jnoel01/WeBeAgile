@@ -37,7 +37,7 @@ class TestMarriageBeforeDivorce(unittest.TestCase):
     def test2(self):
         self.assertFalse(testMarriageBeforeDivorce('10/20/1981', '4/4/1970'), "Marriage happened after divorce, should be invalid")
     def test3(self):
-        self.assertFalse(testMarriageBeforeDivorce('10/20/1980', '10/20/1980'), "Marriage happened the day of divorce, should be invalid. (I dont think this can happen)")
+        self.assertTrue(testMarriageBeforeDivorce('10/20/1980', '10/20/1980'), "Marriage happened the day of divorce, should be valid.")
     def test4(self):
         self.assertTrue(testMarriageBeforeDivorce('10/20/1980', ''), "There was never a divorce. Should be valid.")
     def test5(self):
@@ -111,33 +111,41 @@ class TestMarriageAfterFourteen(unittest.TestCase):
 
 class TestFewerThan5Kids(unittest.TestCase):
     def test1(self):
-        self.assertTrue(fewerThan5Kids(['@01@', "@02", "@03@", "@04@", "@05" ]), "5 kids should return true")
+        self.assertTrue(fewerThan5Kids(5), "5 kids should return true")
     def test2(self):
-        self.assertFalse(fewerThan5Kids(['@01@', "@02", "@03@", "@04@", "@05@", "@06@" ]), "6 kids should return false")
+        self.assertFalse(fewerThan5Kids(6), "6 kids should return false")
     def test3(self):
-        self.assertTrue(fewerThan5Kids(['@01@', "@02", "@03@", "@04@", ]), "4 kids should return true")
+        self.assertTrue(fewerThan5Kids(4), "4 kids should return true")
     def test4(self):
-        self.assertTrue(fewerThan5Kids([]), "0 kids should return true")
+        self.assertTrue(fewerThan5Kids(0), "0 kids should return true")
 
 class TestChildBornAfterMarriage(unittest.TestCase):
     def test1(self):
-        self.assertTrue(childBornAfterMarriage('5/20/2007', '3/12/1990'), 'Should be valid')
+        self.assertFalse(childBornAfterMarriage('3/20/2001', '10/20/2000'), 'Should be invalid')
     def test2(self):
-        self.assertTrue(childBornAfterMarriage('5/20/2008', '3/19/2008'), 'Should be valid')
+        self.assertTrue(childBornAfterMarriage('3/20/2001', '5/20/2000'), 'Should be valid')
     def test3(self):
-        self.assertFalse(childBornAfterMarriage('5/19/2000', '2/12/2003'), 'Should be invalid')
+        self.assertTrue(childBornAfterMarriage('11/4/2001', '10/5/1999'), 'Should be valid')
     def test4(self):
-        self.assertTrue(childBornAfterMarriage('', '5/20/2001'), 'Should be valid')
+        self.assertFalse(childBornAfterMarriage('3/20/1999', '5/20/2001'), 'Should be invalid')
+    def test5(self):
+        self.assertFalse(childBornAfterMarriage('11/5/2001', '10/12/2001'), 'Should be invalid')
+    def test6(self):
+        self.assertTrue(childBornAfterMarriage('12/11/2001', '1/12/2001'), 'Should be valid')
 
 class TestFatherAliveForConception(unittest.TestCase):
     def test1(self):
-        self.assertFalse(fatherAliveForConception('5/20/2007', '3/12/1990'), 'Should be invalid')
+        self.assertTrue(fatherAliveForConception('3/20/2001', '10/20/2000'), 'Should be valid')
     def test2(self):
-        self.assertFalse(fatherAliveForConception('5/21/2007', '5/20/2006'), 'Father died before conception')
+        self.assertFalse(fatherAliveForConception('3/20/2001', '5/20/2000'), 'Should be invalid')
     def test3(self):
-        self.assertTrue(fatherAliveForConception('5/20/2007', '11/20/2006'), 'Father died same day as conception :(')
+        self.assertFalse(fatherAliveForConception('3/19/2001', '10/12/1999'), 'Should be valid')
     def test4(self):
-        self.assertTrue(fatherAliveForConception('5/20/2007', '9/01/2008'), 'Should be valid')
+        self.assertTrue(fatherAliveForConception('3/20/1999', '5/20/2001'), 'Should be valid')
+    def test5(self):
+        self.assertTrue(fatherAliveForConception('3/11/2001', '1/12/2001'), 'Should be valid')
+    def test6(self):
+        self.assertFalse(fatherAliveForConception('12/11/2001', '1/12/2001'), 'Should be invalid')
 
 if __name__ == "__main__":
     print("Running Tests")

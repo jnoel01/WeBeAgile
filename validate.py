@@ -1,7 +1,6 @@
 # file used to validate logic in parser.py
 from datetime import *
 from sqlite3 import connect
-from dateutil.relativedelta import relativedelta
 
 dateDic = {
     "JAN": 1,
@@ -93,8 +92,8 @@ def testBirthBeforeDeath(birth, deathDate):
 
 def testMarriageBeforeDivorce(marriage, divorce):
     valid = True
-    if marriage == divorce:
-        return False
+    if(marriage == divorce) or (marriage == "NA"):
+        return True
     if not divorce:
         return valid
     divorce = formatDate(divorce)
@@ -165,6 +164,8 @@ def marriageAfterYears(births, marriage):
     marriage = formatDate(marriage)
     for birth in births:
         birth = formatDate(birth)
+        if marriage[2] - birth[2] < 0:
+            return 1
         if marriage[2] - birth[2] < 18:
             if count == 0:
                 return -1
@@ -174,56 +175,61 @@ def marriageAfterYears(births, marriage):
     return True
 
 def fewerThan5Kids(kids):
-    #takes a list of kids ID's and checks if there is 5 or less
-    if len(kids) <= 5:
+    #checks if number of kids inputted is less than 5
+    if kids <= 5:
         return True
     else:
         return False
 
-def fatherAliveForConception(childBirth, fatherDeath):
+def fatherAliveForConception(childBorn, fatherDeath):
     #father must be alive during child conception
-    conception = formatDate(childBirth)
-    fatherDeath = formatDate(fatherDeath)
-    birthStrings = list(map(str, conception))
-    birthNewStrings = "/".join(birthStrings)
-    while (birthNewStrings[0] == (str(range(1,9)))):
-        ''.join(('0',birthNewStrings))
-        break
-    formatted_date = datetime.strptime(birthNewStrings, '%m/%d/%Y')
-    deathStrings = list(map(str, fatherDeath))
-    deathNewStrings = "/".join(deathStrings)
-    while (deathNewStrings[0] == (str(range(1,9)))):
-        ''.join(('0',deathNewStrings))
-        break
-    death_formatted_date = datetime.strptime(deathNewStrings, '%m/%d/%Y')
-    conceptionDate = formatted_date + relativedelta(months=-9)
-    if conceptionDate > death_formatted_date:
-        return False
-    else:
+    if(fatherDeath == "NA"):
+        return True #Child is born to parents who aren't married
+    if (not childBorn or not fatherDeath):
         return True
+    if len(childBorn) == 0 or len(fatherDeath) == 0:
+        return True
+    childBorn = formatDate(childBorn)
+    fatherDeath = formatDate(fatherDeath)
+    if(childBorn[2] - fatherDeath[2] >= 2):
+        return False
+    elif (childBorn[2] - fatherDeath[2] < 0):
+        return True
+    elif(childBorn[2] - fatherDeath[2] == 1):
+        threshold = 9 - childBorn[0]
+        if(12 - fatherDeath[0] > threshold):
+            return False
+        else:
+            return True
+    else:
+        if(childBorn[0] - fatherDeath[0] > 9):
+            return False
+        else:
+            return True
 
 
 def childBornAfterMarriage(childBorn, marriageDate):
+    if(marriageDate == "NA"):
+        return True #Child is born to parents who aren't married
     if (not childBorn or not marriageDate):
         return True
     if len(childBorn) == 0 or len(marriageDate) == 0:
         return True
     childBorn = formatDate(childBorn)
     marriageDate = formatDate(marriageDate)
-    birthStrings = list(map(str, childBorn))
-    birthNewStrings = "/".join(birthStrings)
-    while (birthNewStrings[0] == (str(range(1,9)))):
-        ''.join(('0',birthNewStrings))
-        break
-    formatted_date = datetime.strptime(birthNewStrings, '%m/%d/%Y')
-    marriageString = list(map(str, marriageDate))
-    marriageNewStrings = "/".join(marriageString)
-    while (marriageNewStrings[0] == (str(range(1,9)))):
-        ''.join(('0',marriageNewStrings))
-        break
-    marriage_formatted_date = datetime.strptime(marriageNewStrings, '%m/%d/%Y')
-    if marriage_formatted_date < formatted_date:
+    if(childBorn[2] - marriageDate[2] >= 2):
         return True
-    else:
+    elif (childBorn[2] - marriageDate[2] < 0):
         return False
-    
+    elif(childBorn[2] - marriageDate[2] == 1):
+        threshold = 9 - childBorn[0]
+        if(12 - marriageDate[0] > threshold):
+            return True
+        else:
+            return False
+    else:
+        if(childBorn[0] - marriageDate[0] > 9):
+            return True
+        else:
+            return False
+            

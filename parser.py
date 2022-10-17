@@ -4,7 +4,7 @@
 from datetime import *
 from prettytable import PrettyTable
 from validate import *
-with open("Sprint1/SprintOneErrorCheck.ged") as f:
+with open("Sprint2/SprintTwoErrorCheck.ged") as f:
     lines = f.readlines()
 
 #List of all supported tags including start, note, end
@@ -66,7 +66,7 @@ husbandDic = {}
 spouseDic = {}
 marriedDic = {}
 divorcedDic = {}
-
+childCount = {}
 
 for line in newLines:
     _id = ""
@@ -173,6 +173,7 @@ print(x)
 y = PrettyTable()
 y.field_names = ["ID", "MARRIED", "DIVORCED", "HUSBAND NAME", "HUSBAND ID", "WIFE NAME", "WIFE ID", "CHILDREN"]
 for famId in famIdList:
+    childCount[famId] = 0
     if not marriedDic.get(famId):
         marriedDic[famId] = "NA"
     if not divorcedDic.get(famId):
@@ -181,21 +182,29 @@ for famId in famIdList:
     for childId in childDic:
         if childDic[childId] == famId:
             children.append(childId)
+            childCount[famId] = childCount.get(famId) + 1
     newRow = [famId, marriedDic.get(famId), divorcedDic.get(famId), nameDic.get(husbandDic.get(famId)), husbandDic.get(famId), nameDic.get(wifeDic.get(famId)), wifeDic.get(famId), children]
     y.add_row(newRow)
 print(y)
 f.close()
 
-#put validation here
+#VALIDATION FOR INDIVIDUALS
 for id in idList:
     birthday = birthDayDic.get(id)
     deathday = deadDic.get(id)
+    age = ageDic.get(id)
     validDeathBeforeBirth = testBirthBeforeDeath(birthday, deathday)
+    validAge = ageLessThanOneFifty(age)
+
+    #SPRINT ONE
     if not validDeathBeforeBirth:
         print(f'ERROR: INDIVIDUAL: US03: {id}: Birthday {birthday} occurs before death date {deathday}')
-#check dates before today, birth b4 marriage, birth b4 death, marriage b4 divorce,
 
-#marriage b4 death, and marriage b4 death
+    #SPRINT TWO
+    if not validAge:
+        print(f'ERROR: INDIVIDUAL: US10: {id}: Death date {deathday} occurs greater than 150 years after {birthday}')
+
+#VALIDATION FOR FAMILIES
 for id in famIdList:
     marriage = marriedDic.get(id)
     divorce = divorcedDic.get(id)
@@ -203,11 +212,16 @@ for id in famIdList:
     husbandId = husbandDic.get(id)
     birthDays = [birthDayDic.get(wifeId), birthDayDic.get(husbandId)]
     deaths = [deadDic.get(wifeId), deadDic.get(husbandId)]
+    childCounter = childCount.get(id)
+
     validBirthMarriage = testBirthBeforeMarriage(marriage, birthDays)
     validDeathMarriage = testMarriageBeforeDeath(marriage, deaths)
     validMarriageDivorce = testMarriageBeforeDivorce(marriage,divorce)
     validDivorceDeath = testDivorceBeforeDeath(divorce, deaths)
+    validChildCount = fewerThan5Kids(childCounter)
+    validMarriageAges = marriageAfterYears(birthDays, marriage)
 
+    #SPRINT ONE
     if not datesBeforeToday(marriage):
         print(f'ERROR: FAMILY: US01: {id}: Marriage date {marriage} is in the future')
     if not datesBeforeToday(divorce):
@@ -225,14 +239,36 @@ for id in famIdList:
         print(f'ERROR: FAMILY: US02: {id}: Wifes birth date {birthDays[0]} following marriage date {marriage}')
     if validBirthMarriage == -2:
         print(f'ERROR: FAMILY: US02: {id}: Husbands birth date {birthDays[1]} following marriage date {marriage}')
+    if not validMarriageDivorce:
+        print(f'ERROR: FAMILY: US04: {id}: Marriage Date {marriedDic.get(id)} before divorce date {divorcedDic.get(id)}')
     if validDeathMarriage == -1:
         print(f'ERROR: FAMILY: US05: {id}: Wifes death date {deaths[0]} occurs before marriage date {marriage}')
     if validDeathMarriage == -2:
         print(f'ERROR: FAMILY: US05: {id}: Husbands death date {deaths[1]} occurs before marriage date {marriage}')
-    if not validMarriageDivorce:
-        print(f'ERROR: FAMILY: US04: {id}: Marriage Date {marriedDic.get(id)} before divorce date {divorcedDic.get(id)}')
     if validDivorceDeath == -1:
         print(f'ERROR: FAMILY: US06: {id}: Divorce Date {divorcedDic.get(id)} following wife death date {birthDays[0]}')
     if validDivorceDeath == -2:
         print(f'ERROR: FAMILY: US06: {id}: Divorce Date {divorcedDic.get(id)} following husbands death date {birthDays[1]}')
+    
+    #SPRINT TWO
+    if not fewerThan5Kids(childCounter):
+        print(f'ERROR: FAMILY: US07: {id}: Family has {childCount.get(id)} children, which is greater than 5.')
+    if validMarriageAges == -1:
+        print(f'ERROR: FAMILY: US11: {id}: Wifes birthday {birthDays[0]} is less than 18 years before marriage date {marriage}')
+    if validMarriageAges == -2:
+        print(f'ERROR: FAMILY: US11: {id}: Husbands birthday {birthDays[1]} is less than 18 years before marriage date {marriage}')
+    for childId in childDic:
+        if childDic.get(childId) == id:
+            childBirthday = birthDayDic.get(childId)
+            validChild9Months = childBornAfterMarriage(childBirthday, marriage)
+            validChildDadDeath = fatherAliveForConception(childBirthday, deaths[1])
+            validChildMomDeath = birthBeforeMotherDeath(childBirthday, deaths[0])
+
+            if not validChild9Months:
+                print(f'ERROR: FAMILY: US08: {id}: Child {childId}s birthday {childBirthday} is less than 9 months before marriage date {marriage}')
+            if not validChildDadDeath:
+                print(f'ERROR: FAMILY: US12: {id}: Child {childId}s birthday {childBirthday} is more than 9 months after fathers death date {deaths[1]}')
+            if not validChildMomDeath:
+                print(f'ERROR: FAMILY: US09: {id}: Child {childId}s birthday {childBirthday} is before mothers death date {deaths[0]}')
+        
 
