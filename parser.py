@@ -8,7 +8,19 @@ with open("Sprint1/SprintOneErrorCheck.ged") as f:
     lines = f.readlines()
 
 #List of all supported tags including start, note, end
-valid_tags =["TRLR", "HEAD", "NOTE", "SEX", "BIRT", "DEAT", "FAMC", "FAMS","MARR", "HUSB", "WIFE", "CHIL","DIV"]
+valid_tags =["TRLR",
+             "HEAD",
+             "NOTE",
+             "SEX",
+             "BIRT",
+             "DEAT",
+             "FAMC",
+             "FAMS",
+             "MARR",
+             "HUSB",
+             "WIFE",
+             "CHIL",
+             "DIV"]
 
 newLines = []
 tempString = []
@@ -16,36 +28,27 @@ tempString = []
 for line in lines:
     sepLine = line.split()
     line = line.replace('\n', "")
-    
     #Checks if tag is supported, if yes Y, if not N
-    if (sepLine[1] in valid_tags):
-        validTag = "Y"
-
-    #Cover the two excpetions, for when INDI and FAM are 3rd token/second index
-    elif (len(sepLine) == 3):
+    if sepLine[1] in valid_tags:
+        valid_tag = "Y"
+    #Cover the two exceptions, for when INDI and FAM are 3rd token/second index
+    elif len(sepLine) == 3:
         if (sepLine[2] == 'INDI' or sepLine[2] == 'FAM'):
-            newLines.append(tempString);
+            newLines.append(tempString)
             tempString = []
-
     tempString += sepLine
-
     #Cover 2 DATE, but not 1 DATE
     if ((sepLine[0] == "2") and (sepLine[1] == "DATE")):
-        validTag = "Y"
-    
+        valid_tag = "Y"
     #Cover 1 NAME, but not 2 NAME
     elif ((sepLine[0] == "1") and (sepLine[1] == "NAME")):
-        validTag = "Y"
-    
+        valid_tag = "Y"
     #All other variations are not supported or valid
     else:
-        validTag = "N"
-
+        valid_tag = "N"
     args = ""
     for x in sepLine[2:len(sepLine)]:
         args += (x + " ")
-
-
 ##INDIVIDUAL STUFF
 idList = []
 famIdList = []
@@ -68,23 +71,23 @@ divorcedDic = {}
 for line in newLines:
     _id = ""
     _famId = ""
-    birthYear = 0
+    birth_year = 0
     deathYear = 0
-    isAlive = True
-    for i in range(len(line)): 
+    is_alive = True
+    for i in range(len(line)):
         # print(line[i])
-        if (line [i] == "INDI"):
+        if line [i] == "INDI":
             _id = line[i - 1]
             idList.append(_id)
-        if (line[i] == "FAM"):
+        if line[i] == "FAM":
             _famId = line[i - 1]
             famIdList.append(_famId)
-        if (line [i] == "NAME"):
+        if line [i] == "NAME":
             nameDic[_id] = line[i + 1] + " " + line[i + 2]
-        if (line[i] == "BIRT"):
+        if line[i] == "BIRT":
             day = ""
             month = ""
-            year = "" 
+            year = ""
             birthDay = ""
             day = line[i + 3]
             month = line[i + 4]
@@ -92,69 +95,77 @@ for line in newLines:
             birthDay = f'{month}/{day}/{year}'
             birthDayDic[_id] = birthDay
             year = int(year)
-            birthYear = year
+            birth_year = year
             age = 2022 - year
             ageDic[_id] = age
-        if (line[i] =="DEAT"):
+        if line[i] =="DEAT":
             day = ""
             month = ""
-            year = "" 
-            deathDay = ""
-            if (line[i + 1] == "N"):
+            year = ""
+            death_day = ""
+            if line[i + 1] == "N":
                 #they're allive
-                isAlive = True
+                is_alive = True
                 deadDic[_id] = "NA"
-                aliveDic[_id] = isAlive
-            elif (line[i + 1] == "Y"):
-                isAlive = False
-                aliveDic[_id] = isAlive
+                aliveDic[_id] = is_alive
+            elif line[i + 1] == "Y":
+                is_alive = False
+                aliveDic[_id] = is_alive
                 #they dead
-            aliveDic[_id] = isAlive
-            if not(isAlive):
+            aliveDic[_id] = is_alive
+            if not is_alive:
                 day = line[i + 4]
                 month = line[i + 5]
                 year  = line[i + 6]
                 deathYear = int(year)
-                age = deathYear - birthYear
+                age = deathYear - birth_year
                 ageDic[_id] = age
-                deathDay = f'{month}/{day}/{year}'
-                deadDic[_id] = deathDay
-        if (isAlive):
-            isAlive = True
+                death_day = f'{month}/{day}/{year}'
+                deadDic[_id] = death_day
+        if is_alive:
+            is_alive = True
             deadDic[_id] = "NA"
-            aliveDic[_id] = isAlive
-        if (line[i] == "SEX"):
+            aliveDic[_id] = is_alive
+        if line[i] == "SEX":
             genderDic[_id] = line[i + 1]
-        if (line[i] == "CHIL"):
+        if line[i] == "CHIL":
             childDic[line[i + 1]] = _famId
         if (line[i] == "WIFE" or line[i] == "HUSB"):
             spouseDic[line[i + 1]] = _famId
-            if (line[i] == "WIFE"):
+            if line[i] == "WIFE":
                 wifeDic[_famId] = line[i + 1]
             else:
                 husbandDic[_famId] = line[i + 1]
-        if (line[i] == "MARR"):
+        if line[i] == "MARR":
             day = line[i + 3]
             month = line[i + 4]
             year = line[i + 5]
             date = f"{month}/{day}/{year}"
             marriedDic[_famId] = date
-        if (line[i] == "DIV"):
+        if line[i] == "DIV":
             day = line[i + 3]
             month = line[i + 4]
             year = line[i + 5]
             date = f"{month}/{day}/{year}"
             print(date)
             divorcedDic[_famId] = date
-        
-    #now the person is complete
+        #now the person is complete
 
 x = PrettyTable()
-x.field_names = ["ID", "NAME", "GENDER","BIRTHDAY", "AGE", "ALIVE", "DEATH", "CHILD", "SPOUSE"]
+x.field_names = ["ID",
+                "NAME",
+                "GENDER",
+                "BIRTHDAY",
+                "AGE", 
+                "ALIVE",
+                "DEATH",
+                "CHILD",
+                "SPOUSE"]
+
 for id in idList:
-    if(not childDic.get(id)):
+    if not childDic.get(id):
         childDic[id] = "NA"
-    if(not spouseDic.get(id)):
+    if not spouseDic.get(id):
         spouseDic[id] = "NA"
     newRow = [id,nameDic.get(id),genderDic.get(id),birthDayDic.get(id),ageDic.get(id),aliveDic.get(id), deadDic.get(id), childDic.get(id), spouseDic.get(id)]
     x.add_row(newRow)
@@ -162,9 +173,9 @@ print(x)
 y = PrettyTable()
 y.field_names = ["ID", "MARRIED", "DIVORCED", "HUSBAND NAME", "HUSBAND ID", "WIFE NAME", "WIFE ID", "CHILDREN"]
 for famId in famIdList:
-    if(not marriedDic.get(famId)):
+    if not marriedDic.get(famId):
         marriedDic[famId] = "NA"
-    if(not divorcedDic.get(famId)):
+    if not divorcedDic.get(famId):
         divorcedDic[famId] = "NA"
     children = []
     for childId in childDic:
@@ -176,18 +187,14 @@ print(y)
 f.close()
 
 #put validation here
-    
 for id in idList:
     birthday = birthDayDic.get(id)
     deathday = deadDic.get(id)
-
     validDeathBeforeBirth = testBirthBeforeDeath(birthday, deathday)
-
-    if not(validDeathBeforeBirth):
+    if not validDeathBeforeBirth:
         print(f'ERROR: INDIVIDUAL: US03: {id}: Birthday {birthday} occurs before death date {deathday}')
-
-
 #check dates before today, birth b4 marriage, birth b4 death, marriage b4 divorce,
+
 #marriage b4 death, and marriage b4 death
 for id in famIdList:
     marriage = marriedDic.get(id)
@@ -201,31 +208,31 @@ for id in famIdList:
     validMarriageDivorce = testMarriageBeforeDivorce(marriage,divorce)
     validDivorceDeath = testDivorceBeforeDeath(divorce, deaths)
 
-    if not(datesBeforeToday(marriage)):
+    if not datesBeforeToday(marriage):
         print(f'ERROR: FAMILY: US01: {id}: Marriage date {marriage} is in the future')
-    if not(datesBeforeToday(divorce)):
+    if not datesBeforeToday(divorce):
         print(f'ERROR: FAMILY: US01: {id}: Divorce date {divorce} is in the future')
-    if not(datesBeforeToday(birthDays[0])):
+    if not datesBeforeToday(birthDays[0]):
         print(f'ERROR: FAMILY: US01: {id}: Wifes birth date {birthDays[0]} is in the future')
-    if not(datesBeforeToday(birthDays[1])):
+    if not datesBeforeToday(birthDays[1]):
         print(f'ERROR: FAMILY: US01: {id}: Husbands birth date {birthDays[1]} is in the future')
-    if not(datesBeforeToday(deaths[0])):
+    if not datesBeforeToday(deaths[0]):
         print(f'ERROR: FAMILY: US01: {id}: Wifes birth date {deaths[0]} is in the future')
-    if not(datesBeforeToday(deaths[1])):
+    if not datesBeforeToday(deaths[1]):
         print(f'ERROR: FAMILY: US01: {id}: Husbands death date {deaths[1]} is in the future')
 
-    if (validBirthMarriage == -1):
+    if validBirthMarriage == -1:
         print(f'ERROR: FAMILY: US02: {id}: Wifes birth date {birthDays[0]} following marriage date {marriage}')
-    if (validBirthMarriage == -2):
+    if validBirthMarriage == -2:
         print(f'ERROR: FAMILY: US02: {id}: Husbands birth date {birthDays[1]} following marriage date {marriage}')
-    if (validDeathMarriage == -1):
+    if validDeathMarriage == -1:
         print(f'ERROR: FAMILY: US05: {id}: Wifes death date {deaths[0]} occurs before marriage date {marriage}')
-    if (validDeathMarriage == -2):
+    if validDeathMarriage == -2:
         print(f'ERROR: FAMILY: US05: {id}: Husbands death date {deaths[1]} occurs before marriage date {marriage}')
-    if not (validMarriageDivorce):
+    if not validMarriageDivorce:
         print(f'ERROR: FAMILY: US04: {id}: Marriage Date {marriedDic.get(id)} before divorce date {divorcedDic.get(id)}')
-    if (validDivorceDeath == -1):
+    if validDivorceDeath == -1:
         print(f'ERROR: FAMILY: US06: {id}: Divorce Date {divorcedDic.get(id)} following wife death date {birthDays[0]}')
-    if (validDivorceDeath == -2):
+    if validDivorceDeath == -2:
         print(f'ERROR: FAMILY: US06: {id}: Divorce Date {divorcedDic.get(id)} following husbands death date {birthDays[1]}')
 
