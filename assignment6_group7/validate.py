@@ -18,49 +18,37 @@ dateDic = {
 }
 
 
-
-def getDistanceBetweenDates(a,b):
-    #takes two dates and returns the length between as 
-    # a list of [years, months, days]
-    if (a == "NA" or b == "NA"):
-        return True
-    result = []
-    result[0] = b[2] - a[2]
-    if b[0] >= a[0]:
-        result[1] = b[0] - a[0]
-    else:
-        result[0] = result[0] - 1
-        result[1] = 12 - a[0] + b[0]
-    if b[1] >= a[1]:
-        result[2] = b[1] - a[1]
-    else:
-        result[2] = 31 - a[1] + b[1]
-    return result
-
-
 def formatDate(date):
     if (date == "NA" or not date):
         return "NA"
     list = date.split("/")
+    #print(list)
     if not dateDic.get(list[0]):
         result = [int(list[0]), int(list[1]), int(list[2])]
     else:
         result = [dateDic.get(list[0]), int(list[1]), int(list[2])]
     return result
-
-    
 def compareDate(a,b):
     #returns true if B is after A
     #if b is the same day as A, it also returns true
     if (a == "NA" or b == "NA"):
         return True
-    if b[2] < a[2]: return False
-    elif b[2] == a[2] and b[0] < a[0]: return False
-    elif b[2] == a[2] and b[0] == a[0] and b[1] < a[1]: return False
-    else: return True 
-
-
-
+    if b[2] > a[2]: #year b is after a
+        return True
+    elif b[2] == a[2]: #same year
+        if b[0] > a[0]: #month b is after a
+            return True
+        elif b[0] == a[0]: #same year same month
+            if b[1] > a[1]:#day b is after a
+                return True
+            elif b[1] == a[1]:
+                return True
+            else: #day b is before a
+                return False
+        else:
+            return False
+    else: # year b is before a
+        return False
 def datesBeforeToday(dates):
     valid = True
     today = date.today()
@@ -193,27 +181,31 @@ def fewerThan5Kids(kids):
     else:
         return False
 
-#after refactoring 
 def fatherAliveForConception(childBorn, fatherDeath):
+    #father must be alive during child conception
     if(fatherDeath == "NA"):
-        #father must be alive during child conception
-        return True 
+        return True #Child is born to parents who aren't married
     if (not childBorn or not fatherDeath):
         return True
     if len(childBorn) == 0 or len(fatherDeath) == 0:
         return True
     childBorn = formatDate(childBorn)
     fatherDeath = formatDate(fatherDeath)
-    #format birth into conception, check against father's death
-    conception = childBorn
-    for i in range(9):
-        if conception[0] != 1:
-            conception[0] = conception[0] - 1
+    if(childBorn[2] - fatherDeath[2] >= 2):
+        return False
+    elif (childBorn[2] - fatherDeath[2] < 0):
+        return True
+    elif(childBorn[2] - fatherDeath[2] == 1):
+        threshold = 9 - childBorn[0]
+        if(12 - fatherDeath[0] > threshold):
+            return False
         else:
-            conception[0] = 12
-            conception[2] = conception[2] - 1
-    return compareDate(conception,fatherDeath)    
-
+            return True
+    else:
+        if(childBorn[0] - fatherDeath[0] > 9):
+            return False
+        else:
+            return True
 
 
 def childBornAfterMarriage(childBorn, marriageDate):
