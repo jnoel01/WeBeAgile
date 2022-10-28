@@ -266,17 +266,16 @@ def cantMarryChild(fatherId, motherId, children):
     return result
 
 def cantMarrySibling(husbandId, wifeId, dict):
-    # takes two spouse's id's and their famlily ID
+    # takes two spouse's id's and their family ID
     result = True
     children = []
     for fam in dict:
-        chilren = dict[fam]
-        print(chilren, husbandId, wifeId)
+        children = dict[fam]
+        print(children, husbandId, wifeId)
         print(husbandId in children)
-        for child in children:
-            if child == husbandId or child == wifeId:
-                result = False
-                return False
+        if husbandId in children and wifeId in children:
+            result = False
+            return False
     return result
 
 testDict = {'F1': ['A1', 'A2', 'A3'],'F2': ['B1', 'B2'],'F3': ['C1', 'C2', 'C3', 'C4']}
