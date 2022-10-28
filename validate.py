@@ -186,13 +186,6 @@ def marriageAfterYears(births, marriage):
         count = count + 1
     return True
 
-def fewerThan5Kids(kids):
-    #checks if number of kids inputted is less than 5
-    if kids <= 5:
-        return True
-    else:
-        return False
-
 #after refactoring 
 def fatherAliveForConception(childBorn, fatherDeath):
     if(fatherDeath == "NA"):
@@ -240,4 +233,53 @@ def childBornAfterMarriage(childBorn, marriageDate):
             return True
         else:
             return False
-            
+
+def maxSiblingBirth(birthday, children):
+    if children == 5:
+        for child in len(children):
+            if birthday[child].get() ==  birthday[child-1].get():
+                ++child 
+                return False
+            else:
+                return True
+    else:
+        return True
+
+
+
+
+def maxSiblings(kids):
+    if kids > 15:
+        return False
+    else:
+        return True
+
+def cantMarryChild(fatherId, motherId, children):
+    #takes two the family's spouse ID's and an array of their children 
+    #returns true if no incest 
+    result = True
+    if motherId == fatherId: return False
+    if not fatherId or not motherId: return True
+    for child in children:
+        if (fatherId == child or motherId == child):
+            result = False
+    return result
+
+def cantMarrySibling(husbandId, wifeId, dict):
+    # takes two spouse's id's and their famlily ID
+    result = True
+    children = []
+    for fam in dict:
+        chilren = dict[fam]
+        print(chilren, husbandId, wifeId)
+        print(husbandId in children)
+        for child in children:
+            if child == husbandId or child == wifeId:
+                result = False
+                return False
+    return result
+
+testDict = {'F1': ['A1', 'A2', 'A3'],'F2': ['B1', 'B2'],'F3': ['C1', 'C2', 'C3', 'C4']}
+cantMarryChild('C1', 'C2', testDict)
+
+    

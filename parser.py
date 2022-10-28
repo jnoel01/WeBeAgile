@@ -67,7 +67,7 @@ spouseDic = {}
 marriedDic = {}
 divorcedDic = {}
 childCount = {}
-
+famToChildren = {}
 for line in newLines:
     _id = ""
     _famId = ""
@@ -183,6 +183,7 @@ for famId in famIdList:
         if childDic[childId] == famId:
             children.append(childId)
             childCount[famId] = childCount.get(famId) + 1
+    famToChildren[famId] = children
     newRow = [famId, marriedDic.get(famId), divorcedDic.get(famId), nameDic.get(husbandDic.get(famId)), husbandDic.get(famId), nameDic.get(wifeDic.get(famId)), wifeDic.get(famId), children]
     y.add_row(newRow)
 print(y)
@@ -218,9 +219,10 @@ for id in famIdList:
     validDeathMarriage = testMarriageBeforeDeath(marriage, deaths)
     validMarriageDivorce = testMarriageBeforeDivorce(marriage,divorce)
     validDivorceDeath = testDivorceBeforeDeath(divorce, deaths)
-    validChildCount = fewerThan5Kids(childCounter)
     validMarriageAges = marriageAfterYears(birthDays, marriage)
 
+    didNotMarryChildren = cantMarryChild(husbandId, wifeId, famToChildren[id])
+    didNotMarrySiblings = cantMarrySibling(husbandId, wifeId)
     #SPRINT ONE
     if not datesBeforeToday(marriage):
         print(f'ERROR: FAMILY: US01: {id}: Marriage date {marriage} is in the future')
@@ -270,5 +272,8 @@ for id in famIdList:
                 print(f'ERROR: FAMILY: US12: {id}: Child {childId}s birthday {childBirthday} is more than 9 months after fathers death date {deaths[1]}')
             if not validChildMomDeath:
                 print(f'ERROR: FAMILY: US09: {id}: Child {childId}s birthday {childBirthday} is before mothers death date {deaths[0]}')
-        
+
+    # SPRINT 3
+    if not didNotMarryChildren:
+        print(f'ERROR: FAMILY: US15: {id}: Family has a parent married to their child')
 

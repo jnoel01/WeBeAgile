@@ -1,5 +1,4 @@
 import unittest
-
 from validate import *
 '''
 function testDivorceBeforeDeath takes two inputs, 
@@ -109,16 +108,6 @@ class TestMarriageAfterFourteen(unittest.TestCase):
     def test4(self):
         self.assertTrue(marriageAfterYears(['9/10/2004', '5/24/1970'], ''), 'Should pass because these two arent married')
 
-class TestFewerThan5Kids(unittest.TestCase):
-    def test1(self):
-        self.assertTrue(fewerThan5Kids(5), "5 kids should return true")
-    def test2(self):
-        self.assertFalse(fewerThan5Kids(6), "6 kids should return false")
-    def test3(self):
-        self.assertTrue(fewerThan5Kids(4), "4 kids should return true")
-    def test4(self):
-        self.assertTrue(fewerThan5Kids(0), "0 kids should return true")
-
 class TestChildBornAfterMarriage(unittest.TestCase):
     def test1(self):
         self.assertFalse(childBornAfterMarriage('3/20/2001', '10/20/2000'), 'Should be invalid')
@@ -146,6 +135,60 @@ class TestFatherAliveForConception(unittest.TestCase):
         self.assertTrue(fatherAliveForConception('3/11/2001', '1/12/2001'), 'Should be valid')
     def test6(self):
         self.assertFalse(fatherAliveForConception('12/11/2001', '1/12/2001'), 'Should be invalid')
+
+class maxSiblingBirth(unittest.TestCase):
+    def test1(self):
+        self.assertTrue(maxSiblingBirth(5, ['11/12/2020', '11/12/2020', '11/12/2020', '11/12/2020', '11/12/2020']), 'Should be valid')
+    def test2(self):
+        self.assertFalse(maxSiblingBirth(6, ['11/12/2020', '11/12/2020', '11/12/2020', '11/12/2020', '11/12/2020', '11/12/2020']),  'Should be invalid')
+    def test3(self):
+        self.assertFalse(maxSiblingBirth(6, ['11/12/2020', '11/12/2020', '11/12/2020', '11/12/2020', '11/12/2020', '11/12/2021']), 'Should be valid')
+    def test4(self):
+        self.assertTrue(maxSiblingBirth(1, ['06/12/1999']), 'Should be valid')
+    def test5(self):
+        self.assertTrue(maxSiblingBirth(0, []), 'Should be valid')
+    def test6(self):
+        self.assertFalse(maxSiblingBirth(10, ['11/12/2020', '11/12/2020', '11/12/2020', '11/12/2020', '11/12/2020', '11/12/2020', '11/12/2020', '11/12/2020', '11/12/2020', '11/12/2020']), 'Should be invalid')
+
+class maxSiblingsTest(unittest.TestCase):
+    def test1(self):
+        self.assertTrue(maxSiblings(5), "5 kids should return true")
+    def test2(self):
+        self.assertFalse(maxSiblings(16), "6 kids should return false")
+    def test3(self):
+        self.assertTrue(maxSiblings(0), "4 kids should return true")
+    def test4(self):
+        self.assertTrue(maxSiblings(15), "0 kids should return true")
+class testCantMarryChildren(unittest.TestCase):
+    def test1(self):
+        self.assertTrue(cantMarryChild('A1', 'B2', []), "no kids should pass")
+    def test2(self):
+        self.assertTrue(cantMarryChild('A1', '', []), "not married should pass")
+    def test3(self):
+        self.assertTrue(cantMarryChild('', '', []), 'empty family should pass')
+    def test3(self):
+        self.assertFalse(cantMarryChild('A1', 'B2', ['B2']), '1 child married should fail - dad incest')
+    def test4(self):
+        self.assertFalse(cantMarryChild('A1', 'B2', ['A1' ]), '1 child married should fail - mom incest')
+    def test5(self):
+        self.assertFalse(cantMarryChild('A1', 'B2', ['A1', 'D3', 'D5' ]), '1 child married should fail - dad incest with multiple kids')
+    def test6(self):
+        self.assertTrue(cantMarryChild('A1', 'B2', ['D1', 'D3', 'D5' ]), 'valid family with kids should pass')
+        
+class testCantMarrySibling(unittest.TestCase):
+    testDict = {'F1': ['A1', 'A2', 'A3'],'F2': ['B1', 'B2'],'F3': ['C1', 'C2', 'C3', 'C4']}
+    def test1(self):
+        self.assertTrue(cantMarrySibling('A1', 'B2', {}), 'no children in famToChildren should pass')
+    def test2(self):
+        self.assertTrue(cantMarrySibling("A1", "",{}), 'only 1 spouse, should pass')
+    def test3(self):
+        self.assertTrue(cantMarrySibling("", "",{}), 'no spouse and no chidlren should pass')
+    def test3(self):
+        self.assertTrue(cantMarrySibling("A1", "B4",self.testDict), 'valid marriage should pass')
+    def test4(self):
+        self.assertFalse(cantMarrySibling("A1", "A2",self.testDict), '2 of 3 children married should fail')
+    def test5(self):
+        self.assertFalse(cantMarrySibling("B1", "B2",self.testDict), '2 of 2 children married should fail')
 
 if __name__ == "__main__":
     print("Running Tests")
