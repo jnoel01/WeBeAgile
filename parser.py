@@ -4,7 +4,7 @@
 from datetime import *
 from prettytable import PrettyTable
 from validate import *
-with open("Sprint2/SprintTwoErrorCheck.ged") as f:
+with open("Sprint3/SprintThreeErrorCheck.ged") as f:
     lines = f.readlines()
 
 #List of all supported tags including start, note, end
@@ -222,7 +222,7 @@ for id in famIdList:
     validMarriageAges = marriageAfterYears(birthDays, marriage)
 
     didNotMarryChildren = cantMarryChild(husbandId, wifeId, famToChildren[id])
-    didNotMarrySiblings = cantMarrySibling(husbandId, wifeId)
+    #didNotMarrySiblings = cantMarrySibling(husbandId, wifeId)
     #SPRINT ONE
     if not datesBeforeToday(marriage):
         print(f'ERROR: FAMILY: US01: {id}: Marriage date {marriage} is in the future')
@@ -253,7 +253,7 @@ for id in famIdList:
         print(f'ERROR: FAMILY: US06: {id}: Divorce Date {divorcedDic.get(id)} following husbands death date {birthDays[1]}')
     
     #SPRINT TWO
-    if not fewerThan5Kids(childCounter):
+    if not maxSiblings(childCounter):
         print(f'ERROR: FAMILY: US07: {id}: Family has {childCount.get(id)} children, which is greater than 5.')
     if validMarriageAges == -1:
         print(f'ERROR: FAMILY: US11: {id}: Wifes birthday {birthDays[0]} is less than 18 years before marriage date {marriage}')
