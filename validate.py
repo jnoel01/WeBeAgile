@@ -278,6 +278,13 @@ def cantMarrySibling(husbandId, wifeId, dict):
             return False
     return result
 
+def cantMarryFamily(husband, wife, members):
+    if husband in members:
+        return False
+    else:
+        return True
+
+
 testDict = {'F1': ['A1', 'A2', 'A3'],'F2': ['B1', 'B2'],'F3': ['C1', 'C2', 'C3', 'C4']}
 cantMarryChild('C1', 'C2', testDict)
 

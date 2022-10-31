@@ -58,6 +58,8 @@ genderDic = {}
 birthDayDic = {}
 aliveDic = {}
 deadDic = {}
+females = []
+males = []
 
 #MARRIAGE STUFF
 childDic = {}
@@ -68,6 +70,8 @@ marriedDic = {}
 divorcedDic = {}
 childCount = {}
 famToChildren = {}
+
+
 for line in newLines:
     _id = ""
     _famId = ""
@@ -84,6 +88,11 @@ for line in newLines:
             famIdList.append(_famId)
         if line [i] == "NAME":
             nameDic[_id] = line[i + 1] + " " + line[i + 2]
+        if line[i] == "SEX": 
+            if line[i + 1] == "F":
+                females.append(_id)
+            else:
+                males.append(_id)
         if line[i] == "BIRT":
             day = ""
             month = ""
@@ -189,7 +198,7 @@ for famId in famIdList:
 print(y)
 f.close()
 
-#VALIDATION FOR INDIVIDUALS
+# #VALIDATION FOR INDIVIDUALS
 for id in idList:
     birthday = birthDayDic.get(id)
     deathday = deadDic.get(id)
@@ -205,6 +214,34 @@ for id in idList:
     if not validAge:
         print(f'ERROR: INDIVIDUAL: US10: {id}: Death date {deathday} occurs greater than 150 years after {birthday}')
 
+#VALIDATION FOR EXTENDED FAMILIES (OUTSIDE OF IMMEDIATE)
+for id in famIdList:
+    siblings = []
+    children = famToChildren[id]
+    if len(children) != 0:
+        cousins = []
+        for secId in famIdList:
+            husband = husbandDic.get(secId)
+            wife = wifeDic.get(secId)
+            if husband in children:
+                kiddos = famToChildren[secId]
+                for kid in kiddos:
+                    cousins.append(kid)
+            if wife in children:
+                kiddos = famToChildren[secId]
+                for kid in kiddos:
+                    cousins.append(kid)
+        perps = []
+        for famId in famIdList:
+            husband = husbandDic.get(famId)
+            wife = wifeDic.get(famId)
+            if husband in cousins:
+                perps.append(husband)
+            if wife in cousins:
+                perps.append(wife)
+        if len(perps) == 2:
+            print(f'ERROR: FAMILY: US17: {id}: Husband {perps[0]} and Wife {perps[1]} are first cousins.')
+
 #VALIDATION FOR FAMILIES
 for id in famIdList:
     marriage = marriedDic.get(id)
@@ -214,6 +251,12 @@ for id in famIdList:
     birthDays = [birthDayDic.get(wifeId), birthDayDic.get(husbandId)]
     deaths = [deadDic.get(wifeId), deadDic.get(husbandId)]
     childCounter = childCount.get(id)
+
+    if husbandId not in males:
+        print(f'ERROR: FAMILY: US18: {id}: Husband {husbandId} is not a male.')
+    if wifeId not in females:
+        print(f'ERROR: FAMILY: US18: {id}: Wife {wifeId} is not a female.')
+
 
     validBirthMarriage = testBirthBeforeMarriage(marriage, birthDays)
     validDeathMarriage = testMarriageBeforeDeath(marriage, deaths)
@@ -273,7 +316,7 @@ for id in famIdList:
             if not validChildMomDeath:
                 print(f'ERROR: FAMILY: US09: {id}: Child {childId}s birthday {childBirthday} is before mothers death date {deaths[0]}')
 
-    # SPRINT 3
+    # SPRINT THREE
     if not didNotMarryChildren:
         print(f'ERROR: FAMILY: US15: {id}: Family has a parent married to their child')
 
