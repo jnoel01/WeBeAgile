@@ -244,6 +244,8 @@ for id in famIdList:
 
 #VALIDATION FOR FAMILIES
 for id in famIdList:
+    fiveBirthCheck = False
+    childBirths = []
     marriage = marriedDic.get(id)
     divorce = divorcedDic.get(id)
     wifeId = wifeDic.get(id)
@@ -265,7 +267,8 @@ for id in famIdList:
     validMarriageAges = marriageAfterYears(birthDays, marriage)
 
     didNotMarryChildren = cantMarryChild(husbandId, wifeId, famToChildren[id])
-    #didNotMarrySiblings = cantMarrySibling(husbandId, wifeId)
+    didNotMarrySiblings = cantMarrySibling(husbandId, wifeId, famToChildren[id])
+
     #SPRINT ONE
     if not datesBeforeToday(marriage):
         print(f'ERROR: FAMILY: US01: {id}: Marriage date {marriage} is in the future')
@@ -296,7 +299,7 @@ for id in famIdList:
         print(f'ERROR: FAMILY: US06: {id}: Divorce Date {divorcedDic.get(id)} following husbands death date {birthDays[1]}')
     
     #SPRINT TWO
-    if not maxSiblings(childCounter):
+    if not maxSiblings(childCounter, 5):
         print(f'ERROR: FAMILY: US07: {id}: Family has {childCount.get(id)} children, which is greater than 5.')
     if validMarriageAges == -1:
         print(f'ERROR: FAMILY: US11: {id}: Wifes birthday {birthDays[0]} is less than 18 years before marriage date {marriage}')
@@ -305,9 +308,12 @@ for id in famIdList:
     for childId in childDic:
         if childDic.get(childId) == id:
             childBirthday = birthDayDic.get(childId)
+            childBirths.append(childBirthday)
+            
             validChild9Months = childBornAfterMarriage(childBirthday, marriage)
             validChildDadDeath = fatherAliveForConception(childBirthday, deaths[1])
             validChildMomDeath = birthBeforeMotherDeath(childBirthday, deaths[0])
+            validFiveBirths = antiFiveBirths(childBirths)
 
             if not validChild9Months:
                 print(f'ERROR: FAMILY: US08: {id}: Child {childId}s birthday {childBirthday} is less than 9 months before marriage date {marriage}')
@@ -315,8 +321,16 @@ for id in famIdList:
                 print(f'ERROR: FAMILY: US12: {id}: Child {childId}s birthday {childBirthday} is more than 9 months after fathers death date {deaths[1]}')
             if not validChildMomDeath:
                 print(f'ERROR: FAMILY: US09: {id}: Child {childId}s birthday {childBirthday} is before mothers death date {deaths[0]}')
+            if not validFiveBirths and not fiveBirthCheck:
+                fiveBirthCheck = True
+                print(f'ERROR: FAMILY: US13: {id}: This family gave birth to more than five children at once!')
 
     # SPRINT THREE
     if not didNotMarryChildren:
         print(f'ERROR: FAMILY: US15: {id}: Family has a parent married to their child')
+    if not didNotMarrySiblings:
+        print(f'ERROR: FAMILY: US16: {id}: Family has a siblings married to each other')
+    if not maxSiblings(childCounter, 15):
+        print(f'ERROR: FAMILY: US14: {id}: Family has {childCount.get(id)} children, which is greater than 15.')
+
 

@@ -245,11 +245,8 @@ def maxSiblingBirth(birthday, children):
     else:
         return True
 
-
-
-
-def maxSiblings(kids):
-    if kids > 15:
+def maxSiblings(kids, num):
+    if kids > num:
         return False
     else:
         return True
@@ -270,9 +267,7 @@ def cantMarrySibling(husbandId, wifeId, dict):
     result = True
     children = []
     for fam in dict:
-        children = dict[fam]
-        print(children, husbandId, wifeId)
-        print(husbandId in children)
+        children = fam
         if husbandId in children and wifeId in children:
             result = False
             return False
@@ -283,6 +278,21 @@ def cantMarryFamily(husband, wife, members):
         return False
     else:
         return True
+
+def antiFiveBirths(birthdays):
+    if len(birthdays) < 0:
+        return True
+    diction = {}
+    for day in birthdays:
+        if not diction.get(day):
+            diction[day] = 1
+        else:
+            diction[day] = diction.get(day) + 1
+    for val in diction:
+        if diction.get(val) > 5:
+            return False
+    return True
+        
 
 
 testDict = {'F1': ['A1', 'A2', 'A3'],'F2': ['B1', 'B2'],'F3': ['C1', 'C2', 'C3', 'C4']}
