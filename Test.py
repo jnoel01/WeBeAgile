@@ -189,7 +189,32 @@ class testCantMarrySibling(unittest.TestCase):
         self.assertFalse(cantMarrySibling("A1", "A2",self.testDict), '2 of 3 children married should fail')
     def test5(self):
         self.assertFalse(cantMarrySibling("B1", "B2",self.testDict), '2 of 2 children married should fail')
-
+class testNoKidsSameName(unittest.TestCase):
+    def test1(self):
+        self.assertTrue(noSiblingsSameName([]), "no kids should pass")
+    def test2(self):
+        self.assertTrue(noSiblingsSameName(["name1 lastname"]), "1 kid should pass")
+    def test3(self):
+        self.assertTrue(noSiblingsSameName(["name1 lastname", "name2 lastname"]), "2 unique kids should pass")
+    def test3(self):
+        self.assertFalse(noSiblingsSameName(["name1 lastname", "name1 lastname"]), "2 kids with same name should fail")
+class testNoSameNameandBirthday(unittest.TestCase):
+    def test1(self):
+        nameDict = {"ID1": "Paul Smith", "ID2": "Sally Jane", "ID3": "Paul Smith"}
+        birthDayDict = {"ID1": "MAY/5/1980", "ID2": "MAY/19/2000", "ID3": "JUN/10/2019"}
+        self.assertTrue(noSameNameAndBirthday(nameDict,birthDayDict), "should be valid")
+    def test2(self):
+        nameDict = {"ID1": "Paul Smith", "ID2": "Sally Jane", "ID3": "Paul Smith"}
+        birthDayDict = {"ID1": "MAY/5/1980", "ID2": "MAY/19/2000", "ID3": "MAY/5/1980"}
+        self.assertTrue(noSameNameAndBirthday(nameDict,birthDayDict), "should be valid")
+    def test2(self):
+        nameDict = {"ID1": "Paul Jones", "ID2": "Sally Jane", "ID3": "Paul Smith"}
+        birthDayDict = {"ID1": "MAY/5/1980", "ID2": "MAY/19/2000", "ID3": "MAY/5/1980"}
+        self.assertTrue(noSameNameAndBirthday(nameDict,birthDayDict), "should be valid")
+    def test2(self):
+        nameDict = {}
+        birthDayDict = {}
+        self.assertTrue(noSameNameAndBirthday(nameDict,birthDayDict), "should be valid")
 if __name__ == "__main__":
     print("Running Tests")
     unittest.main()

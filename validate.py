@@ -17,8 +17,12 @@ dateDic = {
     "DEC": 12,
 }
 
-
-
+def idToValue(ids, dict ):
+    #takes a list of id and a dict and returns the values of those id's in that dict
+    result = []
+    for item in ids:
+        result.append(dict[item])
+    return result
 def getDistanceBetweenDates(a,b):
     #takes two dates and returns the length between as 
     # a list of [years, months, days]
@@ -293,7 +297,35 @@ def antiFiveBirths(birthdays):
             return False
     return True
         
+def noSiblingsSameName(children):
+    #checks that that two kids don't have the same first name
+    #format the string to just get the first name
+    formattedChildren = []
+    for child in children:
+        newChild = child.split(" ",1)
+        formattedChildren.append(newChild[0])
+    
+    if len(children) <= 1:
+        return True
+    else:
+        chilrenSet = set(formattedChildren)
+        if len(chilrenSet) == len(formattedChildren):
+            return True
+        else:
+            return False
 
+def noSameNameAndBirthday(names, birthdays):
+    #takes in a set of names and a set of birthdays
+    # uses the ID to check there are no duplicates
+    l1 = []
+    for id in names:
+        item = f'{names.get(id)} {birthdays.get(id)}' 
+        l1.append(item)
+    s1 = set(l1)
+    if len(s1) == len(l1):
+        return True 
+    else:
+        return False
 
 testDict = {'F1': ['A1', 'A2', 'A3'],'F2': ['B1', 'B2'],'F3': ['C1', 'C2', 'C3', 'C4']}
 cantMarryChild('C1', 'C2', testDict)

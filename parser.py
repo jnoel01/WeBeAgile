@@ -4,7 +4,7 @@
 from datetime import *
 from prettytable import PrettyTable
 from validate import *
-with open("Sprint3/SprintThreeErrorCheck.ged") as f:
+with open("Sprint4/SprintFourErrorCheck.ged") as f:
     lines = f.readlines()
 
 #List of all supported tags including start, note, end
@@ -198,11 +198,16 @@ for famId in famIdList:
 print(y)
 f.close()
 
+deadPeople = []
 # #VALIDATION FOR INDIVIDUALS
 for id in idList:
+    if(idList.count(id) > 1):
+        print(f'ERROR: INDIVIDUAL: US19: {id}: ID {id} appears more than once in this family!')
     birthday = birthDayDic.get(id)
     deathday = deadDic.get(id)
     age = ageDic.get(id)
+    if(deathday != 'NA'):
+        deadPeople.append(nameDic.get(id))
     validDeathBeforeBirth = testBirthBeforeDeath(birthday, deathday)
     validAge = ageLessThanOneFifty(age)
 
@@ -213,6 +218,7 @@ for id in idList:
     #SPRINT TWO
     if not validAge:
         print(f'ERROR: INDIVIDUAL: US10: {id}: Death date {deathday} occurs greater than 150 years after {birthday}')
+
 
 #VALIDATION FOR EXTENDED FAMILIES (OUTSIDE OF IMMEDIATE)
 for id in famIdList:
@@ -242,6 +248,7 @@ for id in famIdList:
         if len(perps) == 2:
             print(f'ERROR: FAMILY: US17: {id}: Husband {perps[0]} and Wife {perps[1]} are first cousins.')
 
+livingMarried = []
 #VALIDATION FOR FAMILIES
 for id in famIdList:
     fiveBirthCheck = False
@@ -254,6 +261,10 @@ for id in famIdList:
     deaths = [deadDic.get(wifeId), deadDic.get(husbandId)]
     childCounter = childCount.get(id)
 
+    if(deadDic.get(wifeId) == 'NA'):
+        livingMarried.append(nameDic.get(wifeId))
+    if(deadDic.get(husbandId) == 'NA'):
+        livingMarried.append(nameDic.get(husbandId))
     if husbandId not in males:
         print(f'ERROR: FAMILY: US18: {id}: Husband {husbandId} is not a male.')
     if wifeId not in females:
@@ -267,8 +278,11 @@ for id in famIdList:
     validMarriageAges = marriageAfterYears(birthDays, marriage)
 
     didNotMarryChildren = cantMarryChild(husbandId, wifeId, famToChildren[id])
-    didNotMarrySiblings = cantMarrySibling(husbandId, wifeId, famToChildren[id])
+    #didNotMarrySiblings = cantMarrySibling(husbandId, wifeId, famToChildren[id])
+    childrenNames = idToValue(famToChildren[id], nameDic)
+    noKidsSameName = noSiblingsSameName(childrenNames)
 
+    isNoSameNameAndBirthday = noSameNameAndBirthday(nameDic,birthDayDic)
     #SPRINT ONE
     if not datesBeforeToday(marriage):
         print(f'ERROR: FAMILY: US01: {id}: Marriage date {marriage} is in the future')
@@ -328,9 +342,28 @@ for id in famIdList:
     # SPRINT THREE
     if not didNotMarryChildren:
         print(f'ERROR: FAMILY: US15: {id}: Family has a parent married to their child')
-    if not didNotMarrySiblings:
-        print(f'ERROR: FAMILY: US16: {id}: Family has a siblings married to each other')
+    #if not didNotMarrySiblings:
+        #print(f'ERROR: FAMILY: US16: {id}: Family has a siblings married to each other')
     if not maxSiblings(childCounter, 15):
         print(f'ERROR: FAMILY: US14: {id}: Family has {childCount.get(id)} children, which is greater than 15.')
 
+    #SPRINT FOUR
+    if not isNoSameNameAndBirthday:
+        print(f'ERROR: FAMILY: US20: {id}: Family has two people with the same name and birthday')
+    if not noKidsSameName:
+        print(f'ERROR: FAMILY: US21: {id}: Family has two children with the same first name')
+livingSingle = []
+for id in idList:
+    name = nameDic.get(id)
+    if(not name in livingMarried):
+        if(deadDic.get(id) == 'NA'):
+            livingSingle.append(name)
+
+#SPRINT FOUR LISTING USER STORIES
+print("INDIVIDUAL: US22: LISTING DECEASED FAMILY MEMBERS")
+print(deadPeople)
+print("INDIVIDUAL: US23: LISTING LIVING MARRIED FAMILY MEMBERS")
+print(livingMarried)
+print("INDIVIDUAL: US24: LISTING LIVING SINGLE FAMILY MEMBERS")
+print(livingSingle)
 
